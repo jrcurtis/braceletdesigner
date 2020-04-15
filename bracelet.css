@@ -1,0 +1,196 @@
+
+body
+{
+    font-family: arial;
+}
+
+h1
+{
+    margin: 0px;
+}
+
+#pattern
+{
+    margin: 10px;
+}
+
+#pattern>.even
+{
+    
+}
+
+#pattern>.odd
+{
+    padding-left: 27px;
+}
+
+#pattern>:last-child>.knot
+{
+    visibility: hidden;
+}
+
+#pattern>:last-child>.knot>.string
+{
+    visibility: visible;
+}
+
+.knot
+{
+    position: relative;
+    border-radius: 25px;
+    border: solid 1px;
+    width: 50px;
+    height: 50px;
+    margin-right: 5px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    z-index: auto;
+}
+
+.string
+{
+    display: inline-block;
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    width: 50px;
+    height: 6px;
+    border: solid 1px;
+    border-radius: 3px;
+    z-index: -1;
+    transform-origin: left center;
+}
+
+.string.a
+{
+    rotate: -125deg;
+}
+
+.string.b
+{
+    rotate: -55deg;
+}
+
+.string.loose
+{
+    rotate: -90deg;
+    width: 100px;
+}
+
+.string.loose.a
+{
+    left: 10px;
+}
+
+.string.loose.b
+{
+    left: 40px;
+}
+
+.knot.f
+{
+    background-image: url('f.png');
+}
+
+.knot.b
+{
+    background-image: url('b.png');
+}
+
+.knot.fb
+{
+    background-image: url('fb.png');
+}
+
+.knot.bf
+{
+    background-image: url('bf.png');
+}
+
+#colors-list>li
+{
+    display: inline list-item;
+    margin-right: 5px;
+}
+
+#string-colors-list>li
+{
+    display: inline list-item;
+    margin-right: 5px;
+}
+
+#string-colors-list li input
+{
+    width: 50px;
+}
+
+.success
+{
+    color: #0a0;
+}
+
+.error
+{
+    color: #a00;
+}
+
+.hcontrol
+{
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.hcontrol>:first-child
+{
+    display: inline-block;
+    float: left;
+    padding: 3px 10px 3px 10px;
+    margin: 0px;
+    height: 25px;
+    border-radius: 10px 0px 0px 10px;
+    border: solid 1px;
+    border-color: #eef #669 #669 #eef;
+    background-color: #aae;
+}
+
+.hcontrol>:last-child
+{
+    display: inline-block;
+    float: left;
+    padding: 3px;
+    margin: 0px;
+    height: 25px;
+    border-radius: 0px 10px 10px 0px;
+    border: solid 1px;
+    border-color: #eef #669 #669 #eef;
+    background: #dde;
+}
+
+.vcontrol
+{
+    display: block;
+    margin-bottom: 10px;
+}
+
+.vcontrol>:first-child
+{
+    display: block;
+    padding: 3px 10px 3px 10px;
+    margin: 0px;
+    border-radius: 10px 10px 0px 0px;
+    border: solid 1px;
+    border-color: #eef #669 #669 #eef;
+    background-color: #aae;
+}
+
+.vcontrol>:last-child
+{
+    display: block;
+    padding: 3px 10px 3px 10px;
+    margin: 0px;
+    border-radius: 0px 0px 10px 10px;
+    border: solid 1px;
+    border-color: #eef #669 #669 #eef;
+    background-color: #dde;
+}

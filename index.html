@@ -1,0 +1,84 @@
+<html>
+    <head>
+        <script src="bracelet.js"></script>
+        <link rel="stylesheet" href="bracelet.css"></style>
+    </head>
+
+    <body>
+        <div class="vcontrol" >
+            <span><h1>Friendship Bracelet Designer</h1></span>
+            <span>
+                <p>Use this web page to help with designing friendship bracelet
+                   normal patterns. Click on the knots to edit them. The preview
+                   will update in real time.</p>
+                
+                <p>You can copy the text in the Pattern Data section at the
+                   bottom and save it to a file on your computer if you would
+                   like to keep working on the pattern later.</p>
+
+                <input type="button" id="randomize" value="Randomize" />
+            </span>
+        </div>
+        <div class="hcontrol">
+            <span>Strings</span>
+            <span>
+                <input type="number" min="2" id="num-strings"/>
+            </span>
+        </div>
+
+        <div class="hcontrol">
+            <span>Colors</span>
+            <span>
+                <input type="number" min="1" id="num-colors" />
+            </span>
+        </div>
+
+        <div class="hcontrol">
+            <span>Rows</span>
+            <span>
+                <input type="number" min="2" step="2" id="num-rows" />
+            </span>
+        </div>
+
+        <div class="vcontrol">
+            <span>Colors</span>
+            <span>
+                <ol id="colors-list" ></ol>
+            </span>
+        </div>
+
+        <div class="vcontrol">
+            <span>String colors</span>
+            <span>
+                <ol id="string-colors-list" ></ol>
+            </span>
+        </div>
+
+        <canvas id="pattern-preview" width="1024" height="480"></canvas>
+
+        <div id="pattern" >
+        </div>
+
+        <div class="vcontrol">
+            <span>Pattern Data</span>
+            <span>
+                <textarea id="pattern-text" autocomplete="off" cols="100" rows="12" ></textarea>
+                <br/>
+                <span id="pattern-text-message" ></span>
+                <br/>
+                <input type="button" id="deserialize-pattern" value="Load" />
+            </span>
+        </div>
+
+        <div class="vcontrol" >
+            <span>Pattern Knots</span>
+            <span>
+                <textarea id="pattern-knots" autocomplete="off" cols="100" rows="12" ></textarea>
+                <br/>
+                <span id="pattern-knots-message" ></span>
+                <br/>
+                <input type="button" id="load-knots" value="Load" />
+            </span>
+        </div>
+    </body>
+</html>
