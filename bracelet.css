@@ -69,20 +69,17 @@ h1
 
 .string.a
 {
-    rotate: -125deg;
-    -webkit-transform: rotate(-125deg);
+    transform: rotate(-125deg);
 }
 
 .string.b
 {
-    rotate: -55deg;
-    -webkit-transform: rotate(-55deg);
+    transform: rotate(-55deg);
 }
 
 .string.loose
 {
-    rotate: -90deg;
-    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
     width: 100px;
 }
 
