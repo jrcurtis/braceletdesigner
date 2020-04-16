@@ -2,6 +2,7 @@
 window.addEventListener('load', function ()
 {
     var pattern = {};
+    var colorCache;
     var canvas;
     var ctx;
 
@@ -17,6 +18,7 @@ window.addEventListener('load', function ()
     var patternKnotsMessage;
 
     var knotTypes = ['f', 'b', 'fb', 'bf'];
+    var knotsFlipped = {'f': 'b', 'b': 'f', 'fb': 'bf', 'bf': 'fb'};
     
     function init()
     {
@@ -61,6 +63,48 @@ window.addEventListener('load', function ()
         document.getElementById('randomize').addEventListener('click', function(e)
         {
             randomize();
+            updateUI();
+            drawPreview();
+        });
+
+        document.getElementById('flip-h').addEventListener('click', function (e)
+        {
+            flipHorizontally();
+            updateUI();
+            drawPreview();
+        });
+
+        document.getElementById('flip-v').addEventListener('click', function (e)
+        {
+            flipVertically();
+            updateUI();
+            drawPreview();
+        });
+
+        document.getElementById('double-h').addEventListener('click', function (e)
+        {
+            doubleHorizontally();
+            updateUI();
+            drawPreview();
+        });
+
+        document.getElementById('double-v').addEventListener('click', function (e)
+        {
+            doubleVertically();
+            updateUI();
+            drawPreview();
+        });
+
+        document.getElementById('mirror-h').addEventListener('click', function (e)
+        {
+            mirrorHorizontally();
+            updateUI();
+            drawPreview();
+        });
+
+        document.getElementById('mirror-v').addEventListener('click', function (e)
+        {
+            mirrorVertically();
             updateUI();
             drawPreview();
         });
@@ -378,6 +422,139 @@ window.addEventListener('load', function ()
         pattern.stringColors[i] = Math.min(Math.max(color, 0), pattern.colors.length - 1);
     }
 
+    function flipHorizontally()
+    {
+        if (pattern.numStrings % 2 == 1)
+        {
+            var start = pattern.knots.shift();
+            pattern.knots.push(start);
+            pattern.stringColors = Array.from(colorCache[1]);
+        }
+
+        pattern.stringColors.reverse();
+
+        for (var i = 0; i < pattern.knots.length; i++)
+        {
+            pattern.knots[i].reverse();
+
+            for (var j = 0; j < pattern.knots[i].length; j++)
+            {
+                pattern.knots[i][j] = knotsFlipped[pattern.knots[i][j]];
+            }
+        }
+    }
+
+    function flipVertically()
+    {
+        if (pattern.numStrings % 2 == 0)
+        {
+            var end = pattern.knots.pop();
+            pattern.knots.reverse();
+            pattern.knots.push(end);
+            pattern.stringColors = Array.from(colorCache[pattern.knots.length - 1]);
+        }
+        else
+        {
+            pattern.knots.reverse();
+            pattern.stringColors = Array.from(colorCache[pattern.knots.length]);
+        }
+
+        for (var i = 0; i < pattern.knots.length; i++)
+        {
+            for (var j = 0; j < pattern.knots[i].length; j++)
+            {
+                pattern.knots[i][j] = knotsFlipped[pattern.knots[i][j]];
+            }
+        }
+    }
+
+    function doubleHorizontally()
+    {
+        for (var i = 0; i < pattern.knots.length; i++)
+        {
+            if (pattern.numStrings % 2 == 0 && i % 2 == 1)
+            {
+                pattern.knots[i] = pattern.knots[i].concat(['fb'], pattern.knots[i]);
+            }
+            else if (pattern.numStrings % 2 == 1)
+            {
+                pattern.knots[i] = pattern.knots[i].concat(['fb'], pattern.knots[i]);
+            }
+            else
+            {
+                pattern.knots[i] = pattern.knots[i].concat(pattern.knots[i]);
+            }
+        }
+
+        if (pattern.numStrings % 2 == 0)
+        {
+            pattern.numStrings *= 2;
+            pattern.stringColors = pattern.stringColors.concat(pattern.stringColors);
+        }
+        else
+        {
+            pattern.numStrings = 2 * pattern.numStrings + 1;
+            pattern.stringColors = pattern.stringColors.concat([pattern.stringColors[pattern.stringColors.length - 1]], pattern.stringColors);
+        }
+    }
+
+    function doubleVertically()
+    {
+        var length = pattern.knots.length;
+        for (var i = 0; i < length; i++)
+        {
+            pattern.knots.push(Array.from(pattern.knots[i]));
+        }
+    }
+
+    function mirrorHorizontally()
+    {
+        for (var i = 0; i < pattern.knots.length; i++)
+        {
+            var row = Array.from(pattern.knots[i]);
+            row.reverse();
+
+            for (var j = 0; j < row.length; j++)
+            {
+                row[j] = knotsFlipped[row[j]];
+            }
+
+            if (pattern.numStrings % 2 == 0 && i % 2 == 1)
+            {
+                pattern.knots[i] = pattern.knots[i].concat(['fb'], row);
+            }
+            else if (pattern.numStrings % 2 == 1 && i % 2 == 0)
+            {
+                pattern.knots[i] = pattern.knots[i].concat(['fb'], row);
+            }
+            else
+            {
+                pattern.knots[i] = pattern.knots[i].concat(row);
+            }
+        }
+
+        var stringColors = Array.from(pattern.stringColors);
+        stringColors.reverse();
+        pattern.numStrings *= 2;
+        pattern.stringColors = pattern.stringColors.concat(stringColors);
+    }
+
+    function mirrorVertically()
+    {
+        var length = pattern.knots.length;
+        for (var i = 0; i < length; i++)
+        {
+            var row = Array.from(pattern.knots[(2 * length - i - 2) % length]);
+
+            for (var j = 0; j < row.length; j++)
+            {
+                row[j] = knotsFlipped[row[j]];
+            }
+
+            pattern.knots.push(row);
+        }
+    }
+
     function serialize()
     {
         patternText.value = JSON.stringify(pattern);
@@ -506,11 +683,11 @@ window.addEventListener('load', function ()
         canvas.width = width;
         canvas.height = height;
 
+        colorCache = [];
         var colors = [];
         for (var i = 0; i < pattern.stringColors.length; i++)
         {
-            var color = pattern.colors[pattern.stringColors[i]];
-            colors.push(color);
+            colors.push(pattern.stringColors[i]);
         }
 
         for (var i = 0; i < 2 * width / knotDiag; i++)
@@ -525,14 +702,16 @@ window.addEventListener('load', function ()
                 var firstString = stringOffset + j * 2;
                 var x = knotDiag + i * knotDiag / 2;
                 var y = height - 1.25 * knotDiag / 2 - knotDiag / 2 * stringOffset - knotDiag * j;
-                var color = colors[firstString + (knotRow[j].startsWith('f') ? 0 : 1)];
+                var color = pattern.colors[colors[firstString + (knotRow[j].startsWith('f') ? 0 : 1)]];
 
                 if (i <= pattern.knots.length)
                 {
+                    colorCache.push(Array.from(colors));
                     var id = 'knot-' + i + '-' + j;
                     document.getElementById(id).style.backgroundColor = color;
-                    document.getElementById(id + '-a').style.backgroundColor = colors[firstString];
-                    document.getElementById(id + '-b').style.backgroundColor = colors[firstString + 1];
+                    document.getElementById(id + '-a').style.backgroundColor = pattern.colors[colors[firstString]];
+                    document.getElementById(id + '-b').style.backgroundColor = pattern.colors[colors[firstString + 1]];
+                    
                 }
 
                 if (knotRow[j].length == 1)
@@ -548,12 +727,12 @@ window.addEventListener('load', function ()
                 ctx.fillRect(-knotSize / 2, -knotSize / 2, knotSize, knotSize);
                 if (j == 0 && stringOffset == 0)
                 {
-                    ctx.fillStyle = nextColors[0];
+                    ctx.fillStyle = pattern.colors[nextColors[0]];
                     ctx.fillRect(knotSize / 2, -knotSize / 2, knotSize, knotSize);
                 }
                 else if (j == knotRow.length - 1 && stringOffset == pattern.numStrings % 2)
                 {
-                    ctx.fillStyle = nextColors[colors.length - 1];
+                    ctx.fillStyle = pattern.colors[nextColors[colors.length - 1]];
                     ctx.fillRect(-knotSize / 2, -3 * knotSize / 2, knotSize, knotSize);
                 }
                 ctx.restore();
