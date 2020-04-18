@@ -249,7 +249,6 @@ window.addEventListener('load', function ()
 
             while (rowDiv.children.length < pattern.knots[knotRow].length)
             {
-                console.log('adding knots to i ' + i + ' knotrow ' + knotRow + ' rowid ' + rowDiv.id);
                 var j = rowDiv.children.length;
 
                 var knotCol = j;
@@ -273,10 +272,8 @@ window.addEventListener('load', function ()
 
                 knotDiv.addEventListener('click', function (kr, kc)
                 {
-                    console.log('adding event listener ' + kr + ', ' + kc);
                     return function(e)
                     {
-                        console.log('editing knot ' + kr + ', ' + kc);
                         var knotType = pattern.knots[kr][kc];
                         var knotTypeI = knotTypes.indexOf(knotType);
                         var nextKnotType = knotTypes[(knotTypeI + 1) % knotTypes.length];
