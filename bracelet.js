@@ -223,7 +223,6 @@ window.addEventListener('load', function ()
             input.value = pattern.stringColors[i] + 1;
         }
 
-
         while (patternDiv.children.length > pattern.knots.length + 1)
         {
             patternDiv.removeChild(patternDiv.lastChild);
@@ -250,13 +249,14 @@ window.addEventListener('load', function ()
 
             while (rowDiv.children.length < pattern.knots[knotRow].length)
             {
+                console.log('adding knots to i ' + i + ' knotrow ' + knotRow + ' rowid ' + rowDiv.id);
                 var j = rowDiv.children.length;
 
                 var knotCol = j;
                 var knotDiv = document.createElement('div');
                 knotDiv.classList.add('knot');
                 knotDiv.id = 'knot-' + i + '-' + j;
-                knotDiv.classList.add(pattern.knots[knotRow][j]);
+                knotDiv.classList.add(pattern.knots[knotRow][knotCol]);
 
                 var stringA = document.createElement('div');
                 stringA.id = knotDiv.id + '-a';
@@ -271,22 +271,24 @@ window.addEventListener('load', function ()
                 knotDiv.appendChild(stringA);
                 knotDiv.appendChild(stringB);
 
-                knotDiv.addEventListener('click', function (knotRow, knotCol)
+                knotDiv.addEventListener('click', function (kr, kc)
                 {
+                    console.log('adding event listener ' + kr + ', ' + kc);
                     return function(e)
                     {
-                        var knotType = pattern.knots[knotRow][knotCol];
+                        console.log('editing knot ' + kr + ', ' + kc);
+                        var knotType = pattern.knots[kr][kc];
                         var knotTypeI = knotTypes.indexOf(knotType);
                         var nextKnotType = knotTypes[(knotTypeI + 1) % knotTypes.length];
 
                         e.target.classList.remove(knotType);
                         e.target.classList.add(nextKnotType);
 
-                        setKnot(knotRow, knotCol, nextKnotType);
+                        setKnot(kr, kc, nextKnotType);
                         serialize();
                         drawPreview();
                     }
-                }(knotRow, knotCol));
+                }(i, j));
 
                 rowDiv.appendChild(knotDiv);
             }
