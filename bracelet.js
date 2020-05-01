@@ -14,6 +14,7 @@ window.addEventListener('load', function ()
     var patternDiv;
     var patternText;
     var patternTextMessage;
+    var patternColorsOrder;
     var patternKnots;
     var patternKnotsMessage;
 
@@ -53,6 +54,7 @@ window.addEventListener('load', function ()
         patternDiv = document.getElementById('pattern');
         patternText = document.getElementById('pattern-text');
         patternTextMessage = document.getElementById('pattern-text-message');
+        patternColorsOrder = document.getElementById('pattern-colors-order');
         patternKnots = document.getElementById('pattern-knots');
         patternKnotsMessage = document.getElementById('pattern-knots-message');
 
@@ -593,6 +595,13 @@ window.addEventListener('load', function ()
             s += '\n';
         }
         patternKnots.value = s;
+
+        s = '';
+        for (var i = 0; i < pattern.stringColors.length; i++)
+        {
+            s += numberToAlpha(pattern.stringColors[i]);
+        }
+        patternColorsOrder.value = s;
     }
 
     function deserialize()
@@ -657,6 +666,14 @@ window.addEventListener('load', function ()
 
     function loadKnots()
     {
+        var knotsColors = patternColorsOrder.value;
+        pattern.numStrings = knotsColors.length;
+        pattern.stringColors = [];
+        for (var i = 0; i < knotsColors.length; i++)
+        {
+            pattern.stringColors.push(knotsColors.charCodeAt(i) - 'a'.charCodeAt(0));
+        }
+
         var knotsLines = patternKnots.value.trim().split('\n');
         var knotsData = [];
         for (var i = 0; i < knotsLines.length; i++)
