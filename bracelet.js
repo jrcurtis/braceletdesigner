@@ -153,11 +153,33 @@ window.addEventListener('load', function ()
 
     }
 
+    function numberToAlpha(x)
+    {
+        var s = '';
+        var p = 26;
+        while (p <= x)
+        {
+            p *= 27;
+        }
+        while (p > 26)
+        {
+            p /= 27;
+            var d = Math.floor(x / p);
+            x -= d * p;
+            s += String.fromCharCode('a'.charCodeAt(0) + d - 1);
+        }
+
+        s += String.fromCharCode('a'.charCodeAt(0) + x);
+
+        return s;
+    }
+
     function updateUI()
     {
         numStringsInput.value = pattern.numStrings;
         numColorsInput.value = pattern.colors.length;
         numRowsInput.value = pattern.knots.length;
+        var colorsSelect = colorsSelect = document.createElement('select');
 
         while (colorsList.children.length < pattern.colors.length)
         {
@@ -188,25 +210,16 @@ window.addEventListener('load', function ()
         for (var i = 0; i < colorsList.children.length; i++)
         {
             colorsList.children[i].firstChild.value = pattern.colors[i];
+
+            var option = document.createElement('option');
+            option.value = i;
+            option.textContent = numberToAlpha(i);
+            colorsSelect.appendChild(option);
         }
 
         while (stringColorsList.children.length < pattern.numStrings)
         {
             var li = document.createElement('li');
-            var input = document.createElement('input');
-
-            input.addEventListener('input', function (i)
-            {
-                return function (e)
-                {
-                    setStringColor(i, e.target.value - 1);
-                    serialize();
-                    drawPreview();
-                }
-            }(stringColorsList.children.length));
-
-            input.type = 'number';
-            li.appendChild(input);
             stringColorsList.appendChild(li);
         }
 
@@ -217,10 +230,25 @@ window.addEventListener('load', function ()
 
         for (var i = 0; i < stringColorsList.children.length; i++)
         {
-            var input = stringColorsList.children[i].firstChild;
-            input.min = "1";
-            input.max = pattern.colors.length.toString();
-            input.value = pattern.stringColors[i] + 1;
+            var stringLi = stringColorsList.children[i];
+            if (stringLi.firstChild)
+            {
+                stringLi.firstChild.remove();
+            }
+            
+            var sel = colorsSelect.cloneNode(true);
+            sel.selectedIndex = pattern.stringColors[i];
+            sel.addEventListener('input', function (col)
+            {
+                return function (e)
+                {
+                    setStringColor(col, e.target.value);
+                    serialize();
+                    drawPreview();
+                }
+            }(i));
+            
+            stringLi.appendChild(sel);
         }
 
         while (patternDiv.children.length > pattern.knots.length + 1)
